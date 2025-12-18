@@ -1,0 +1,33 @@
+<Schema name="fpdwo">
+<Cube name="Purchase" defaultMeasure="StockedQty">
+    <Table name="fact_purchasing"/>
+        <Dimension name="vendor_name" foreignKey="VendorID">
+            <Hierarchy hasAll="true" allMemberName="All vendor" primaryKey="VendorID">
+            <Table name="vendor_name"/>
+            <Level name="Name" column="Name"/>
+            </Hierarchy>
+            </Dimension>
+        <Dimension name="shipmethod" foreignKey="ShipMethodID">
+            <Hierarchy hasAll="true" allMemberName="All shipmethod" primaryKey="ShipMethodID">
+            <Table name="shipmethod"/>
+            <Level name="Name" column="Name"/>
+            </Hierarchy>
+        </Dimension>
+        <Dimension name="product_purchase" foreignKey="PurchaseOrderID">
+            <Hierarchy hasAll="true" allMemberName="All product_purchase" primaryKey="PurchaseOrderID">
+            <Table name="product_purchase"/>
+            <Level name="Name" column="Name"/>
+            </Hierarchy>
+        </Dimension>
+        <Dimension name="date" foreignKey="DateID">
+            <Hierarchy hasAll="true" allMemberName="All date" primaryKey="DateID">
+            <Table name="date"/>
+            <Level name="Tahun" column="Tahun"/>
+            <Level name="Bulan" column="Bulan"/>
+            <Level name="Tanggal" column="Tanggal"/>
+            <Level name="tanggal_lengkap" column="tanggal_lengkap"/>
+            </Hierarchy>
+        </Dimension>
+            <Measure name="StockedQty" column="StockedQty" aggregator="sum" formatString="Standard"/>
+            </Cube>
+</Schema>

@@ -1,0 +1,28 @@
+<Schema name="fpdwo2">
+<Cube name="Sales" defaultMeasure="TotalDue">
+    <Table name="fact_sales"/>
+        <Dimension name="salesperson" foreignKey="SalesPersonID">
+            <Hierarchy hasAll="true" allMemberName="All salesperson" primaryKey="SalesPersonID">
+            <Table name="salesperson"/>
+            <Level name="TerritoryName" column="Name"/>
+            </Hierarchy>
+            </Dimension>
+        <Dimension name="product_sales" foreignKey="SalesOrderID">
+            <Hierarchy hasAll="true" allMemberName="All product_sales" primaryKey="SalesOrderID">
+            <Table name="product_sales"/>
+            <Level name="ProductName" column="Name"/>
+            </Hierarchy>
+        </Dimension>
+        <Dimension name="date" foreignKey="DateID">
+            <Hierarchy hasAll="true" allMemberName="All date" primaryKey="DateID">
+            <Table name="date"/>
+            <Level name="Tahun" column="Tahun"/>
+            <Level name="Bulan" column="Bulan"/>
+            <Level name="Tanggal" column="Tanggal"/>
+            <Level name="tanggal_lengkap" column="tanggal_lengkap"/>
+
+            </Hierarchy>
+        </Dimension>
+            <Measure name="TotalDue" column="TotalDue" aggregator="sum" formatString="Standard"/>
+            </Cube>
+</Schema>
