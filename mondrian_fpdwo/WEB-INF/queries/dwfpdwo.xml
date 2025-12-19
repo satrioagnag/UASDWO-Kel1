@@ -1,0 +1,93 @@
+<Schema name="AdventureWorksDW">
+
+  <Dimension name="Time">
+    <Hierarchy hasAll="true" allMemberName="All Periods" primaryKey="DateKey">
+      <Table name="dimdate"/>
+      <Level name="Year" column="Year" type="Numeric" uniqueMembers="true"/>
+      <Level name="Quarter" column="Quarter" type="Numeric" uniqueMembers="false"/>
+      <Level name="Month" column="MonthName" type="String" uniqueMembers="false"/>
+      <Level name="Date" column="FullDate" type="String" uniqueMembers="true"/>
+    </Hierarchy>
+  </Dimension>
+
+  <Dimension name="Product">
+    <Hierarchy hasAll="true" allMemberName="All Products" primaryKey="ProductKey">
+      <Table name="dimproduct"/>
+      <Level name="Category" column="Category" uniqueMembers="true"/>
+      <Level name="Subcategory" column="Subcategory" uniqueMembers="true"/>
+      <Level name="Product Name" column="ProductName" uniqueMembers="true">
+        <Property name="Safety Stock" column="SafetyStockLevel" type="Numeric"/>
+      </Level>
+    </Hierarchy>
+  </Dimension>
+
+  <Cube name="SalesCube">
+    <Table name="factsales"/>
+
+    <DimensionUsage name="Time" source="Time" foreignKey="DateKey"/>
+    <DimensionUsage name="Product" source="Product" foreignKey="ProductKey"/>
+
+    <Dimension name="Customer" foreignKey="CustomerKey">
+      <Hierarchy hasAll="true" primaryKey="CustomerKey">
+        <Table name="dimcustomer"/>
+        <Level name="Customer Type" column="CustomerType" uniqueMembers="true"/>
+        <Level name="Customer Name" column="CustomerName" uniqueMembers="true"/>
+      </Hierarchy>
+    </Dimension>
+
+    <Dimension name="Sales Person" foreignKey="SalesPersonKey">
+      <Hierarchy hasAll="true" primaryKey="SalesPersonKey">
+        <Table name="dimsalesperson"/>
+        <Level name="Sales Person Name" column="SalesPersonName" uniqueMembers="true"/>
+      </Hierarchy>
+    </Dimension>
+
+    <Dimension name="Special Offer" foreignKey="SpecialOfferKey">
+      <Hierarchy hasAll="true" primaryKey="SpecialOfferKey">
+        <Table name="dimspecialoffer"/>
+        <Level name="Type" column="Type" uniqueMembers="true"/>
+        <Level name="Description" column="Description" uniqueMembers="true"/>
+        <Level name="Discount Pct" column="DiscountPct" type="Numeric" uniqueMembers="false"/>
+      </Hierarchy>
+    </Dimension>
+
+    <Dimension name="Territory" foreignKey="TerritoryKey">
+      <Hierarchy hasAll="true" primaryKey="TerritoryKey">
+        <Table name="dimterritory"/>
+        <Level name="Country" column="CountryRegionName" uniqueMembers="true"/>
+        <Level name="Province" column="StateProvinceName" uniqueMembers="true"/>
+        <Level name="City" column="City" uniqueMembers="true"/>
+      </Hierarchy>
+    </Dimension>
+
+    <Measure name="Total Revenue" column="TotalRevenue" aggregator="sum" formatString="$#,###.00"/>
+
+    <Measure name="Order Quantity" column="OrderQuantity" aggregator="sum" formatString="#,###"/>
+
+    <Measure name="Order Count" column="OrderCount" aggregator="sum" formatString="#,###"/>
+
+    <Measure name="Discount Amount" column="DiscountAmount" aggregator="sum" formatString="$#,###.00"/>
+
+  </Cube>
+
+  <Cube name="InventoryCube">
+    <Table name="factinventory"/>
+
+    <DimensionUsage name="Time" source="Time" foreignKey="DateKey"/>
+    <DimensionUsage name="Product" source="Product" foreignKey="ProductKey"/>
+
+    <Dimension name="Location" foreignKey="LocationKey">
+      <Hierarchy hasAll="true" primaryKey="LocationKey">
+        <Table name="dimlocation"/>
+        <Level name="Location Name" column="LocationName" uniqueMembers="true"/>
+      </Hierarchy>
+    </Dimension>
+
+    <Measure name="Stock Quantity" column="EndOfDayQuantity" aggregator="sum" formatString="#,###"/>
+    
+    <Measure name="Quantity In" column="QuantityIn" aggregator="sum" formatString="#,###"/>
+    <Measure name="Quantity Out" column="QuantityOut" aggregator="sum" formatString="#,###"/>
+
+  </Cube>
+
+</Schema>
